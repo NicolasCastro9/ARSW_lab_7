@@ -1,0 +1,93 @@
+
+body {
+    font-family: 'Gloria Hallelujah', cursive;
+    margin: 0;
+    padding: 0;
+    background-color: #dfb9b9;
+}
+
+
+button{
+    font-family: 'Gloria Hallelujah', cursive;
+    background-color: #9a12d0;
+    color: #fff;
+}
+
+
+.grid {
+    display: flex;
+    grid-template-columns:50% 50%;
+    padding: 20px;
+}
+
+
+.autor {
+    margin-bottom: 20px; 
+}
+
+.autor span {
+    font-weight: bold;
+    margin-right: 10px; 
+}
+.autor {
+    width:30%;
+    display:flex;
+    justify-content:space-evenly;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    margin-left: 10px;
+}
+
+
+.canvas {
+    flex: 1;
+    margin-right: 20px; 
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.tabla {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+#table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#table th, #table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+
+.button {
+    background-color: #13c37a;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: 2px solid #F9DFC2;
+    border-radius: 20px;
+}
+
+#getBlueprintsButton:hover {
+    background-color: #0056b3;
+}
+
+
+.autor {
+    margin-bottom: 20px;
+}
+
+.autor span {
+    font-weight: bold;
+}
