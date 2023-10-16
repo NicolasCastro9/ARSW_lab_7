@@ -1,4 +1,4 @@
-var useApiClient = true;
+var useApiClient = false;
 
 var apimodule; // Variable global para almacenar el módulo seleccionado
 
@@ -12,6 +12,9 @@ if (useApiClient) {
 var app = (function (){
     var author;
     var blueprintName;
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    var currentPoints = [];
 
     // actualiza el contenido de author del HTML  mostrando un mensaje
     function getName() {
@@ -83,8 +86,53 @@ var app = (function (){
         }
         ctx.stroke();
     }
+    canvas.addEventListener("click", function (event) {
+        if (blueprintName) { // Verifica si se ha seleccionado un canvas
+            var x = event.clientX - canvas.getBoundingClientRect().left;
+            var y = event.clientY - canvas.getBoundingClientRect().top;
+
+            // Agrega el punto al final de la secuencia de puntos del canvas actual
+            currentPoints.push({ x, y });
+
+            // Vuelve a pintar el dibujo con la secuencia actualizada
+            repaintCanvas();
+        }
+    });
+    function repaintCanvas() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.restore();
+        context.beginPath();
+        for (let i = 1; i < currentPoints.length; i++) {
+            context.moveTo(currentPoints[i - 1].x, currentPoints[i - 1].y);
+            context.lineTo(currentPoints[i].x, currentPoints[i].y);
+        }
+        context.stroke();
+    }
     return{
         getBlueprintByAuthorAndName:getBlueprintByAuthorAndName,
-        getNameAuthorBlueprints: getNameAuthorBlueprints
+        getNameAuthorBlueprints: getNameAuthorBlueprints,
+        init: function () {
+            console.info('initialized');
+
+            //   Comprueba si el navegador admite el modelo PointerEvent
+            if (window.PointerEvent) {
+                //   Maneja eventos de PointerEvent (compatible con pantallas táctiles)
+                canvas.addEventListener("pointerdown", function (event) {
+                    var x = event.pageX;
+                    var y = event.pageY;
+                    console.log('PointerEvent: pointerdown at ' + x + ',' + y);
+                });
+            } else {
+                //   Maneja eventos de mousedown (para dispositivos con mouse)
+                canvas.addEventListener("mousedown", function (event) {
+                    var x = event.clientX;
+                    var y = event.clientY;
+                    console.log('MouseDown: mousedown at ' + x + ',' + y);
+                });
+            }
+        },
+        
     }
 })();
+
+app.init();
