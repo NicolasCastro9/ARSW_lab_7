@@ -15,6 +15,7 @@ var app = (function (){
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
     var currentPoints = [];
+    var drawing = false;
 
     // actualiza el contenido de author del HTML  mostrando un mensaje
     function getName() {
@@ -86,6 +87,12 @@ var app = (function (){
         }
         ctx.stroke();
     }
+
+    canvas.addEventListener("mousedown", function (event) {
+        if (blueprintName) {
+            drawing = true;
+        }
+    });
     canvas.addEventListener("click", function (event) {
         if (blueprintName) { // Verifica si se ha seleccionado un canvas
             var x = event.clientX - canvas.getBoundingClientRect().left;
@@ -98,10 +105,14 @@ var app = (function (){
             repaintCanvas();
         }
     });
+    canvas.addEventListener("mouseup", function () {
+        drawing = false;
+    });
+
+
     function repaintCanvas() {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.restore();
         context.beginPath();
+        context.strokeStyle = 'black';  
         for (let i = 1; i < currentPoints.length; i++) {
             context.moveTo(currentPoints[i - 1].x, currentPoints[i - 1].y);
             context.lineTo(currentPoints[i].x, currentPoints[i].y);
