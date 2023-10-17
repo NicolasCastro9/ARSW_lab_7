@@ -81,7 +81,10 @@ public class BlueprintAPIController {
         Blueprint blueprintNew = null;
         try {
             blueprintNew = bps.getBlueprint(author, bpname);
-
+            if(blueprintNew == null){
+                System.out.println("\n\n "+author+"\n\n");
+                System.out.println("\n\n "+bpname+"\n\n");
+            }
             blueprintNew.setAuthor(blueprint.getAuthor());
             blueprintNew.setName(blueprint.getName());
             blueprintNew.setPoints(blueprint.getPoints());

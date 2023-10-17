@@ -24,10 +24,14 @@ var app = (function (){
     //  obtener blueprints del autor especificado, si no se manda nada aparece el mensaje
     function getNameAuthorBlueprints() {
         author = $("#author").val();
+        
         if (author === "") {
             alert("Ingese un Nombre");
         } else {
             apimodule.getBlueprintsByAuthor(author,authorData);
+                
+            alert(author);
+
         }
     }
     // utiliza el método map() para tomar una lista de blueprints y transformar cada elemento 
@@ -65,6 +69,7 @@ var app = (function (){
 
     function getBlueprintByAuthorAndName(data) {
         author = $("#author").val();
+        alert(blueprintName);
         blueprintName = data.id;
         $("#nameblu").text("Current blueprint: " + blueprintName);
         apimodule.getBlueprintsByNameAndAuthor(author, blueprintName, printPoints);
@@ -119,6 +124,59 @@ var app = (function (){
         }
         context.stroke();
     }
+
+    // Manejar el evento del botón 'Save/Update'
+    $("#saveUpdateButton").click(function () {   
+        if (author && blueprintName) {
+            // Obtener los puntos del canvas
+            const puntos = currentPoints;
+            
+            // Crear un objeto Blueprint
+            const blueprint = { author: author, name: blueprintName, points: puntos };
+            alert(blueprintName);
+            // Realizar una petición PUT al API para guardar o actualizar el plano
+            $.ajax({
+                url: `/blueprints/${author}/${blueprintName}`,
+                type: 'PUT',
+                data: JSON.stringify(blueprint),
+                contentType: "application/json",
+                success: function () {
+                    // Realizar una petición GET al recurso /blueprints
+                    apimodule.getBlueprintByAuthorAndName(blueprintName);
+                    // Limpiar el canvas
+                    clearCanvas();
+                },
+            });
+        }
+    });
+    
+
+    // Manejar el evento del botón 'Create new blueprint'
+    $("#createBlueprintButton").click(function () {
+        // Solicitar el nombre del nuevo 'blueprint' al usuario
+        const newBlueprintName = prompt("Enter the name for the new blueprint:");
+        author = newBlueprintName;
+
+        if (newBlueprintName) {
+            // Limpiar el canvas
+            clearCanvas();
+
+            // Actualizar el nombre del plano seleccionado
+            blueprintName = newBlueprintName;
+            $("#nameblu").text("Current blueprint: " + blueprintName);
+
+            // Crear un nuevo plano vacío
+            currentPoints = [];
+        }
+    });
+
+    function clearCanvas() {
+        var c = document.getElementById("canvas");
+        var ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, c.width, c.height);
+        currentPoints = [];
+    }
+
     return{
         getBlueprintByAuthorAndName:getBlueprintByAuthorAndName,
         getNameAuthorBlueprints: getNameAuthorBlueprints,
