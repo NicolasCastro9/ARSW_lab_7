@@ -116,7 +116,7 @@ var app = (function (){
         drawing = false;
     });
 
-
+    // La función repaintCanvas se encarga de redibujar los puntos almacenados en el array currentPoints
     function repaintCanvas() {
         context.beginPath();
         context.strokeStyle = 'black';  
