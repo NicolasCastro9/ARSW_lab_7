@@ -49,6 +49,12 @@ var apiclient = (function(){
                     $.ajax({
                         type:"DELETE",
                         url: `/blueprints/${author}/${blueprintName}`,
+                        success: function () {
+                            callback();
+                        },
+                        error: function(error) {
+                            reject(error);
+                        }
                     })
                 )
             });

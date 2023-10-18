@@ -89,6 +89,8 @@ var app = (function (){
     }
 
 
+
+
     
     canvas.addEventListener("pointerdown", function (event) {
         if (!blueprintName) {
@@ -105,6 +107,9 @@ var app = (function (){
         // Repintar el dibujo en el canvas
         repaintCanvas();
     });
+
+
+
 
     function repaintCanvas() {
         if (!blueprintName) {
@@ -128,6 +133,10 @@ var app = (function (){
 
     }
     
+
+
+
+
 
     document.getElementById("saveUpdateButton").addEventListener("click", function () {
         if (author && blueprintName) {
@@ -159,9 +168,12 @@ var app = (function (){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+
+
+
     document.getElementById("createBlueprintButton").addEventListener("click", function () {
             // Solicitar el nombre del nuevo 'blueprint' al usuario
-        const blueprintName = prompt("Enter the name for the new blueprint:");
+        const blueprintName = prompt("Ingrese Nombre del nuevo BluePrint");
 
         if (blueprintName !== null && blueprintName.trim() !== "") {
             // Limpiar el canvas
@@ -174,9 +186,11 @@ var app = (function (){
             });
         } else {
             // Manejar el caso en que el nombre sea nulo o una cadena vacía
-            alert("Please enter a valid blueprint name.");
+            alert("Entre un Valor valido");
         }
     });
+
+
 
 
     document.getElementById("deleteBlueprintButton").addEventListener("click", function () {
@@ -193,11 +207,13 @@ var app = (function (){
                 location.reload();
             }
         } else {
-            alert("Please select a blueprint to delete.");
+            alert("Seleccione BluePrint para borrar");
         }
     });
 
    
+
+
 
 
 
