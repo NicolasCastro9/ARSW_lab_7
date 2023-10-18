@@ -19,6 +19,10 @@
 	1. Se agregue el punto al final de la secuencia de puntos del canvas actual (sólo en la memoria de la aplicación, AÚN NO EN EL API!).
 	2. Se repinte el dibujo.
 
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/c45ce538-b265-4981-b540-64f7dfa6e844)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/8780f7ce-eb86-4e46-82ca-6752c0af530c)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/e171626d-4acd-47d4-85ca-20a1881cd01e)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/3958bd18-f024-4550-940a-6be3793b70cf)
 
 
 
@@ -48,6 +52,13 @@
 	```
 	* Como en este caso se tienen tres operaciones basadas en _callbacks_, y que las mismas requieren realizarse en un orden específico, tenga en cuenta cómo usar las promesas de JavaScript [mediante alguno de los ejemplos disponibles](http://codepen.io/hcadavid/pen/jrwdgK).
 
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/15219e79-b97b-4776-9b48-edfdd19b7c2b)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/8472cf18-6011-4810-8037-5ab88ba6b61c)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/9462aa21-9926-4dae-b441-513580dedba1)
+
+
+
+
 4. Agregue el botón 'Create new blueprint', de manera que cuando se oprima: 
 	* Se borre el canvas actual.
 	* Se solicite el nombre del nuevo 'blueprint' (usted decide la manera de hacerlo).
@@ -56,6 +67,9 @@
 
 	1. Hacer POST al recurso /blueprints, para crear el nuevo plano.
 	2. Hacer GET a este mismo recurso, para actualizar el listado de planos y el puntaje del usuario.
+
+
+
 
 5. Agregue el botón 'DELETE', de manera que (también con promesas):
 	* Borre el canvas.
