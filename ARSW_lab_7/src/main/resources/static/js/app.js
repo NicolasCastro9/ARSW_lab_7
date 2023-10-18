@@ -92,24 +92,26 @@ var app = (function (){
             ctx.stroke();
         }
     }
-
+    //escucha el evento "mousedown" en el lienzo. Cuando un usuario hace clic y 
+    //mantiene presionado el botón del mouse en el lienzo, se activa este evento
     canvas.addEventListener("mousedown", function (event) {
         if (blueprintName) {
             drawing = true;
         }
     });
+    // Este evento se dispara cuando el botón del ratón se hace clic en el área del canvas.
+    // se registra la posición del clic en x e y y se agrega un punto a la secuencia de puntos (currentPoints). 
+    // Luego, se vuelve a pintar el canvas para reflejar la secuencia de puntos actualizada.
     canvas.addEventListener("click", function (event) {
-        if (blueprintName) { // Verifica si se ha seleccionado un canvas
+        if (blueprintName) {
             var x = event.clientX - canvas.getBoundingClientRect().left;
             var y = event.clientY - canvas.getBoundingClientRect().top;
-
-            // Agrega el punto al final de la secuencia de puntos del canvas actual
             currentPoints.push({ x, y });
-
-            // Vuelve a pintar el dibujo con la secuencia actualizada
             repaintCanvas();
         }
     });
+    // Este evento se dispara cuando el botón del ratón se suelta después de ser presionado.
+    // indicar que el usuario ha dejado de dibujar.
     canvas.addEventListener("mouseup", function () {
         drawing = false;
     });
@@ -180,7 +182,7 @@ var app = (function (){
 
             //   Comprueba si el navegador admite el modelo PointerEvent
             if (window.PointerEvent) {
-                //   Maneja eventos de PointerEvent (compatible con pantallas táctiles)
+                //   Maneja eventos de PointerEvent
                 canvas.addEventListener("pointerdown", function (event) {
                     var x = event.pageX;
                     var y = event.pageY;
