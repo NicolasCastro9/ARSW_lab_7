@@ -68,6 +68,10 @@
 	1. Hacer POST al recurso /blueprints, para crear el nuevo plano.
 	2. Hacer GET a este mismo recurso, para actualizar el listado de planos y el puntaje del usuario.
 
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/1e1e65bc-d73f-46b9-86d4-2167ef62cf35)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/e1aa1094-f5f8-4bc7-9bb9-7000edb35e92)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/5330222b-0d2a-4713-b21a-fbbe8bd6d346)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/dd1cea87-3b43-4abb-a36a-333f2997dc34)
 
 
 
@@ -76,7 +80,16 @@
 	* Haga DELETE del recurso correspondiente.
 	* Haga GET de los planos ahora disponibles.
 
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/322f0e55-9e27-47cf-9419-0aabfe561b50)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/1f0e543c-c642-4f60-a354-ede70007a38c)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/1b32f761-bfbf-4731-b14e-4848b696321d)
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/2c67c32b-c896-4ce8-98ee-d4cd1a7def96)
+
+
+
 ### Criterios de evaluación
+
+
 
 1. Funcional
 	* La aplicación carga y dibuja correctamente los planos.
