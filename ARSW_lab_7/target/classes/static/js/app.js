@@ -1,4 +1,4 @@
-var useApiClient = false;
+var useApiClient = true;
 
 var apimodule; // Variable global para almacenar el módulo seleccionado
 
@@ -30,7 +30,6 @@ var app = (function (){
         } else {
             apimodule.getBlueprintsByAuthor(author,authorData);
                 
-            alert(author);
 
         }
     }
@@ -69,28 +68,29 @@ var app = (function (){
 
     function getBlueprintByAuthorAndName(data) {
         author = $("#author").val();
-        alert(blueprintName);
         blueprintName = data.id;
         $("#nameblu").text("Current blueprint: " + blueprintName);
         apimodule.getBlueprintsByNameAndAuthor(author, blueprintName, printPoints);
     }
 
     function printPoints(data) {
-        const puntos = data.points;
-        var c = document.getElementById("canvas");
-        var ctx = c.getContext("2d");
-        ctx.clearRect(0, 0, c.width, c.height);
-        ctx.restore();
-        ctx.beginPath();
-        for (let i = 1; i < puntos.length; i++) {
-            ctx.moveTo(puntos[i - 1].x, puntos[i - 1].y);
-            ctx.lineTo(puntos[i].x, puntos[i].y);
-            if (i === puntos.length - 1) {
-                ctx.moveTo(puntos[i].x, puntos[i].y);
-                ctx.lineTo(puntos[0].x, puntos[0].y);
+        if (data && data.points && data.points.length > 0) {
+            const puntos = data.points;
+            var c = document.getElementById("canvas");
+            var ctx = c.getContext("2d");
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.restore();
+            ctx.beginPath();
+            for (let i = 1; i < puntos.length; i++) {
+                ctx.moveTo(puntos[i - 1].x, puntos[i - 1].y);
+                ctx.lineTo(puntos[i].x, puntos[i].y);
+                if (i === puntos.length - 1) {
+                    ctx.moveTo(puntos[i].x, puntos[i].y);
+                    ctx.lineTo(puntos[0].x, puntos[0].y);
+                }
             }
+            ctx.stroke();
         }
-        ctx.stroke();
     }
 
     canvas.addEventListener("mousedown", function (event) {
@@ -133,40 +133,35 @@ var app = (function (){
             
             // Crear un objeto Blueprint
             const blueprint = { author: author, name: blueprintName, points: puntos };
-            alert(blueprintName);
-            // Realizar una petición PUT al API para guardar o actualizar el plano
-            $.ajax({
-                url: `/blueprints/${author}/${blueprintName}`,
-                type: 'PUT',
-                data: JSON.stringify(blueprint),
-                contentType: "application/json",
-                success: function () {
-                    // Realizar una petición GET al recurso /blueprints
-                    apimodule.getBlueprintByAuthorAndName(blueprintName);
+            apimodule.saveOrUpdateBlueprint(author, blueprintName, blueprint, function () {
+                // Realizar una petición GET al recurso /blueprints
+                apimodule.getBlueprintByAuthorAndName(blueprintName, function () {
                     // Limpiar el canvas
                     clearCanvas();
-                },
+                });
             });
+            
         }
     });
     
 
     // Manejar el evento del botón 'Create new blueprint'
     $("#createBlueprintButton").click(function () {
-        // Solicitar el nombre del nuevo 'blueprint' al usuario
-        const newBlueprintName = prompt("Enter the name for the new blueprint:");
-        author = newBlueprintName;
+            // Solicitar el nombre del nuevo 'blueprint' al usuario
+        const blueprintName = prompt("Enter the name for the new blueprint:");
 
-        if (newBlueprintName) {
+        if (blueprintName !== null && blueprintName.trim() !== "") {
             // Limpiar el canvas
             clearCanvas();
 
-            // Actualizar el nombre del plano seleccionado
-            blueprintName = newBlueprintName;
-            $("#nameblu").text("Current blueprint: " + blueprintName);
-
-            // Crear un nuevo plano vacío
-            currentPoints = [];
+            // Realiza una solicitud POST al recurso /blueprints para crear el nuevo plano
+            apimodule.createNewBlueprint(author, blueprintName, function () {
+                // Realiza una solicitud GET al recurso /blueprints para actualizar la interfaz
+                apimodule.getBlueprintsByAuthor(author, authorData);
+            });
+        } else {
+            // Manejar el caso en que el nombre sea nulo o una cadena vacía
+            alert("Please enter a valid blueprint name.");
         }
     });
 
