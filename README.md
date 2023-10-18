@@ -21,6 +21,12 @@
 
 ![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/7a355943-d827-4819-a30c-e4e090ca96c6)
 
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/bbcaad09-c343-45a0-bee2-c4a026a2a982)
+
+![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/a6e67cb1-286b-4019-8980-5eaf642405bc)
+
+
+
 3. Agregue el botón Save/Update. Respetando la arquitectura de módulos actual del cliente, haga que al oprimirse el botón:
 	1. Se haga PUT al API, con el plano actualizado, en su recurso REST correspondiente.
 	2. Se haga GET al recurso /blueprints, para obtener de nuevo todos los planos realizados.
