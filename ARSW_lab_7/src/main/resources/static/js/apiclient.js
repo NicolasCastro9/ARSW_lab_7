@@ -12,19 +12,23 @@ var apiclient = (function(){
                 callback(data);
             });
         },
-
-        saveOrUpdateBlueprint: function(author, blueprintName, blueprint, callback) {
-            $.ajax({
-                url: `/blueprints/${author}/${blueprintName}`,
-                type: 'PUT',
-                data: JSON.stringify(blueprint),
-                contentType: 'application/json',
-                success: function () {
-                    callback(); // Llamamos al callback después de la operación PUT
-                },
+        updateBlueprint: function (author, blueprintName, blueprint, callback) {
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: `/blueprints/${author}/${blueprintName}`,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(blueprint),
+                    success: function() {
+                        resolve();
+                    },
+                    error: function(error) {
+                        reject(error);
+                    }
+                });
             });
+            
         },
-
         createNewBlueprint: function (author, blueprintName, callback) {
             const newBlueprint = { author: author, name: blueprintName, points: [] };
         
@@ -38,6 +42,20 @@ var apiclient = (function(){
                     callback();
                 },
             });
-        }
+        },
+        deleteBlueprint: function (author, blueprintName) {
+            return new Promise(function (resolve, reject) {
+                resolve(
+                    $.ajax({
+                        type:"DELETE",
+                        url: `/blueprints/${author}/${blueprintName}`,
+                    })
+                )
+            });
+        },
+
+
+        
+
     }
 })();

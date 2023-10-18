@@ -66,5 +66,9 @@ public class BlueprintsServices {
     public Set<Blueprint> filter(Set<Blueprint> blueprints) throws BlueprintNotFoundException{
         return bpf.filters(blueprints);
     }
+    public void deleteBluePrintByAuthorAndName(String author, String name) throws BlueprintNotFoundException {
+        bpp.deleteBlueprint(author, name);
+    }
+    
     
 }

@@ -8,6 +8,7 @@ package edu.eci.arsw.blueprints.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,6 +95,17 @@ public class BlueprintAPIController {
             return new ResponseEntity<>("Espera",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @DeleteMapping(path = "/{author}/{bpname}")
+    public ResponseEntity<?> manejadorDeleteRecurso(@PathVariable ("author") String author, @PathVariable ("bpname") String bpname) throws BlueprintNotFoundException{
+        try {
+            bps.deleteBluePrintByAuthorAndName(author, bpname);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }catch (BlueprintNotFoundException ex) {
+            //Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.FORBIDDEN);
+        }
+    }
+
     
 }
 

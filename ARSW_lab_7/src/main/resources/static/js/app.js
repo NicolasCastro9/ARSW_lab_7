@@ -14,8 +14,12 @@ var app = (function (){
     var blueprintName;
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
-    var currentPoints = [];
     var drawing = false;
+    var currentCanvasData = {
+        // Otros datos del canvas actual
+        points: [], // Inicialmente, la secuencia de puntos está vacía
+    };
+
 
     // actualiza el contenido de author del HTML  mostrando un mensaje
     function getName() {
@@ -24,8 +28,7 @@ var app = (function (){
     //  obtener blueprints del autor especificado, si no se manda nada aparece el mensaje
     function getNameAuthorBlueprints() {
         author = $("#author").val();
-        
-        if (author === "") {
+        if (author === "" || !author) {
             alert("Ingese un Nombre");
         } else {
             apimodule.getBlueprintsByAuthor(author,authorData);
@@ -70,85 +73,93 @@ var app = (function (){
         author = $("#author").val();
         blueprintName = data.id;
         $("#nameblu").text("Current blueprint: " + blueprintName);
-        apimodule.getBlueprintsByNameAndAuthor(author, blueprintName, printPoints);
-    }
-
-    function printPoints(data) {
-        if (data && data.points && data.points.length > 0) {
-            const puntos = data.points;
-            var c = document.getElementById("canvas");
-            var ctx = c.getContext("2d");
-            ctx.clearRect(0, 0, c.width, c.height);
-            ctx.restore();
-            ctx.beginPath();
-            for (let i = 1; i < puntos.length; i++) {
-                ctx.moveTo(puntos[i - 1].x, puntos[i - 1].y);
-                ctx.lineTo(puntos[i].x, puntos[i].y);
-                if (i === puntos.length - 1) {
-                    ctx.moveTo(puntos[i].x, puntos[i].y);
-                    ctx.lineTo(puntos[0].x, puntos[0].y);
-                }
+        // Obtener los puntos existentes del servidor API
+        apimodule.getBlueprintsByNameAndAuthor(author, blueprintName, function(existingData) {
+            // Combinar los puntos existentes con los puntos en memoria
+            if (existingData && existingData.points) {
+                currentCanvasData.points = existingData.points;
+            } else {
+                currentCanvasData.points = [];
             }
-            ctx.stroke();
-        }
+
+        // Repintar el dibujo en el canvas con la nueva combinación de puntos
+        repaintCanvas();
+
+        });
     }
-    //escucha el evento "mousedown" en el lienzo. Cuando un usuario hace clic y 
-    //mantiene presionado el botón del mouse en el lienzo, se activa este evento
-    canvas.addEventListener("mousedown", function (event) {
-        if (blueprintName) {
-            drawing = true;
+
+
+    
+    canvas.addEventListener("pointerdown", function (event) {
+        if (!blueprintName) {
+            console.log("No se ha seleccionado un canvas. Seleccione uno antes de dibujar.");
+            return;
         }
-    });
-    // Este evento se dispara cuando el botón del ratón se hace clic en el área del canvas.
-    // se registra la posición del clic en x e y y se agrega un punto a la secuencia de puntos (currentPoints). 
-    // Luego, se vuelve a pintar el canvas para reflejar la secuencia de puntos actualizada.
-    canvas.addEventListener("click", function (event) {
-        if (blueprintName) {
-            var x = event.clientX - canvas.getBoundingClientRect().left;
-            var y = event.clientY - canvas.getBoundingClientRect().top;
-            currentPoints.push({ x, y });
-            repaintCanvas();
-        }
-    });
-    // Este evento se dispara cuando el botón del ratón se suelta después de ser presionado.
-    // indicar que el usuario ha dejado de dibujar.
-    canvas.addEventListener("mouseup", function () {
-        drawing = false;
+
+        var x = event.clientX - canvas.getBoundingClientRect().left;
+        var y = event.clientY - canvas.getBoundingClientRect().top;
+
+        // Agregar el punto al final de la secuencia de puntos del canvas actual en memoria
+        currentCanvasData.points.push({ x: x, y: y });
+
+        // Repintar el dibujo en el canvas
+        repaintCanvas();
     });
 
-    // La función repaintCanvas se encarga de redibujar los puntos almacenados en el array currentPoints
     function repaintCanvas() {
-        context.beginPath();
-        context.strokeStyle = 'black';  
-        for (let i = 1; i < currentPoints.length; i++) {
-            context.moveTo(currentPoints[i - 1].x, currentPoints[i - 1].y);
-            context.lineTo(currentPoints[i].x, currentPoints[i].y);
+        if (!blueprintName) {
+            console.log("No se ha seleccionado un canvas. Seleccione uno antes de dibujar.");
+            return;
         }
-        context.stroke();
-    }
 
-    // Manejar el evento del botón 'Save/Update'
-    $("#saveUpdateButton").click(function () {   
+        var ctx = canvas.getContext("2d");
+
+        // Limpiar el canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Dibujar los puntos almacenados en la secuencia
+        ctx.beginPath();
+        ctx.moveTo(currentCanvasData.points[0].x, currentCanvasData.points[0].y);
+        for (var i = 1; i < currentCanvasData.points.length; i++) {
+            ctx.lineTo(currentCanvasData.points[i].x, currentCanvasData.points[i].y);
+        }
+        ctx.stroke();
+
+
+    }
+    
+
+    document.getElementById("saveUpdateButton").addEventListener("click", function () {
         if (author && blueprintName) {
-            // Obtener los puntos del canvas
-            const puntos = currentPoints;
+            // Obtener el lienzo actual y convertirlo en un arreglo de puntos
+            const puntos = currentCanvasData.points;
             
             // Crear un objeto Blueprint
             const blueprint = { author: author, name: blueprintName, points: puntos };
-            apimodule.saveOrUpdateBlueprint(author, blueprintName, blueprint, function () {
-                // Realizar una petición GET al recurso /blueprints
-                apimodule.getBlueprintByAuthorAndName(blueprintName, function () {
-                    // Limpiar el canvas
-                    clearCanvas();
+    
+            // Llamar a la función para actualizar el plano
+            apimodule.updateBlueprint(author, blueprintName, blueprint)
+            .then(function() {
+                // Después de actualizar el plano, realizar la solicitud GET para obtener todos los planos
+                apimodule.getBlueprintsByAuthor(author, function (data) {
+                    // Calcular nuevamente los puntos totales del usuario
+                    authorData(data);
                 });
+            })
+            .catch(function(error) {
+                console.error("Error updating blueprint: " + error);
             });
-            
         }
     });
-    
 
-    // Manejar el evento del botón 'Create new blueprint'
-    $("#createBlueprintButton").click(function () {
+
+    function clearCanvas() {
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    document.getElementById("createBlueprintButton").addEventListener("click", function () {
             // Solicitar el nombre del nuevo 'blueprint' al usuario
         const blueprintName = prompt("Enter the name for the new blueprint:");
 
@@ -167,12 +178,28 @@ var app = (function (){
         }
     });
 
-    function clearCanvas() {
-        var c = document.getElementById("canvas");
-        var ctx = c.getContext("2d");
-        ctx.clearRect(0, 0, c.width, c.height);
-        currentPoints = [];
-    }
+
+    document.getElementById("deleteBlueprintButton").addEventListener("click", function () {
+        if (author && blueprintName) {
+            if (confirm("¿Quieres borrar el blueptrint?")) {
+                // Realizar una solicitud DELETE al recurso /blueprints para eliminar el plano actual
+                apimodule.deleteBlueprint(author, blueprintName, function () {
+                    
+                    // Limpiar el canvas después de borrar el plano
+                    clearCanvas();   
+                    // Realizar una solicitud GET al recurso /blueprints para actualizar la interfaz
+                    apimodule.getBlueprintsByAuthor(author, authorData);
+                });
+                location.reload();
+            }
+        } else {
+            alert("Please select a blueprint to delete.");
+        }
+    });
+
+   
+
+
 
     return{
         getBlueprintByAuthorAndName:getBlueprintByAuthorAndName,
