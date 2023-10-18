@@ -19,11 +19,7 @@
 	1. Se agregue el punto al final de la secuencia de puntos del canvas actual (sólo en la memoria de la aplicación, AÚN NO EN EL API!).
 	2. Se repinte el dibujo.
 
-![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/7a355943-d827-4819-a30c-e4e090ca96c6)
 
-![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/bbcaad09-c343-45a0-bee2-c4a026a2a982)
-
-![image](https://github.com/NicolasCastro9/ARSW_lab_7/assets/98556822/a6e67cb1-286b-4019-8980-5eaf642405bc)
 
 
 
